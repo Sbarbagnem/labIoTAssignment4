@@ -60,7 +60,6 @@ void loop() {
     EspConnect();
    } 
    
-  // send JSON Model 
   if(!accepted) {
     JsonSend();
   }

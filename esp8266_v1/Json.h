@@ -1,6 +1,6 @@
 void JsonSend(){
   delay(10000);
- 
+ // while (!Serial) continue;
   DynamicJsonDocument model(capacity_model);
   
   model["id"] = esp_ids;
@@ -21,6 +21,7 @@ void JsonSend(){
   properties.add("called");
   
   // serialize in one row
+  //serializeJson(model, Serial);
   serializeJson(model, buff);
   Serial.println("conversione:");
   Serial.println(model.as<String>());
@@ -33,7 +34,8 @@ void JsonSend(){
   serializeJsonPretty(model, Serial);
 
   Serial.println();
-
+ 
+  //delay(5000); 
 }
 
 void EspConnect(){
@@ -128,6 +130,8 @@ void send_data(){
     data["db"] = 0;
    }
    
+  // serialize in one row
+  //serializeJson(model, Serial);
   serializeJson(data, val_sensor);
 
   // serialize in more row  

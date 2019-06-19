@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "MKR1000_CENTRAL_NODE",
+    "link": "mkr",
+    "description": "il microcontrollore MKR1000 è il nodo centrale della rete, sempre connesso e conosciuto",
+    "actions": [
+      "onMkr",
+      "offMkr"
+    ],
+    "properties": [
+      "light",
+      "temperature",
+      "sound",
+      "flame",
+      "distance",
+      "wifi"
+    ],
+    "ping": [
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    "id": "DC:4F:22:4C:B7:81",
+    "name": "esp1",
+    "link": "esp1",
+    "description": "Health sensor monitoring",
+    "actions": [
+      "on",
+      "off"
+    ],
+    "properties": [
+      "temperature",
+      "vibration",
+      "tilt",
+      "heartbeat",
+      "distance",
+      "called"
+    ],
+    "ping": [
+      false,
+      false,
+      true
+    ]
+  },
+  {
+    "id": "80:7D:3A:42:EF:6A",
+    "name": "esp3",
+    "link": "esp3",
+    "description": "System_v3 sensor monitoring",
+    "actions": [
+      "on",
+      "off"
+    ],
+    "properties": [
+      "temperature"
+    ],
+    "ping": [
+      false,
+      true,
+      true
+    ]
+  }
+]

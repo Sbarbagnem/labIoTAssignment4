@@ -1,3 +1,113 @@
+/*void listenForClients() {
+
+
+  client = server.available();   
+
+  if (client) {                             
+
+    //Serial.println("new client");          
+
+    String currentLine = "";               
+
+    while (client.connected()) {            
+
+      if (client.available()) {             
+
+        char c = client.read();             
+
+        Serial.write(c);                    
+
+        if (c == '\n') {                    
+
+          
+
+          if (currentLine.length() == 0) {
+
+            break;
+
+          }
+
+          else {      
+
+            currentLine = "";
+
+          }
+
+        }
+
+        else if (c != '\r') {   
+
+          currentLine += c;      
+
+        }
+
+        if(currentLine.endsWith("POST /action")){
+
+          //char action[50];
+          int ctr = 0;
+          String data = "";
+          String ptr = "";
+          // dovrebbe esserci il body della post ricevuta dall'mkr
+          while(client.available()) { 
+            int c = client.read();
+            //Serial.write(c);
+            body_post[ctr] = c;
+            ctr++;
+            //strcpy(msg, result.c_str());
+            //Serial.println(msg);
+            //clientPubSub.publish("request/values", msg);
+            Serial.println();
+          }
+          Serial.println();
+          //Serial.println("dati da node");
+          //Serial.println(body_post);
+          ptr = strtok (body_post, "{");
+          Serial.println("json is ");
+          while (ptr != NULL)
+          {
+            ptr = strtok (NULL, "}");   // look for .
+            if(ptr != ""){
+              data = '{' + ptr + '}';
+              //Serial.println(data);
+              const char *data_complete = data.c_str();
+              Serial.println(data_complete);
+              deserializeJson(node, data_complete);
+              if(node["id"] != "1"){
+                Serial.println("mando azione a esp");
+                clientPubSub.publish("Action", data_complete);
+              } 
+              else {
+                if(node["action"] == "onMkr"){
+                  Serial.println("ricevuta azione onMKr");
+                  onHome = true;
+                }
+                else{
+                Serial.println("ricevuta azione offMkr");
+                  onHome = false;
+                }
+              }
+            }
+          }
+          ctr = 0;
+          data = "";
+          ptr = "";
+          break;
+        }
+
+    }
+
+    // close the connection:
+
+    //client.stop();
+
+    Serial.println("client disconnected");
+
+  }
+
+}
+
+}*/
+
 void listenForClients() {
   // listen for incoming clients
   WiFiClient client = server.available();

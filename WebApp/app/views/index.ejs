@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <title>H&H monitoring system</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./stylesheets/main.css">
+
+</head>
+<body>
+        <div class="bs-example">
+                <nav class="navbar navbar-expand-md navbar-light bg-light">
+                    <a href="/" class="navbar-brand">Home & Health</a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div id="navbarCollapse" class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Sistemi</a>
+                                <div class="dropdown-menu">
+                                    <% network.forEach((node) => { %>
+                                        <!-- <a href= "/<%= node.link%>" class="dropdown-item"><%= node.name %></a> -->
+                                        <a href= "/<%= node.id%>" class="dropdown-item"><%= node.name %></a>
+                                    <% }) %>                                    
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+    <header class="page-header header container-fluid">
+            <div class="overlay"></div>
+            <div class="description">
+                    <h1>Benvenuto nella pagina principale della H&H monitoring system</h1>
+                    <p>Dal menu' sistemi e' possibile selezionare i sistemi che sono connessi in quel momento alla rete</p>
+             </div>
+    </header>
+
+    <script src="./javascripts/jquery-3.4.1.min.js"></script>
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script src="./javascripts/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <!-- <script src="/socket.io/socket.io.js"></script> in teoria non serve-->
+
+    <script>
+
+        const socket = io();
+
+        socket.on('add', (data) => {
+            alert("E' stato aggiunto il nodo " + data + " alla rete, la pagina si ricaricherà e nel menù sistemi ci saranno i nodi aggiornati");
+            document.location.reload(true);
+        });
+
+        socket.on('remove', (data) => {
+
+            console.log(data);
+
+            var name_nodes = "";
+
+            for (var i = 0; i < data.length; i++) {
+                console.log(data[i]);
+                name_nodes = name_nodes + data[i].name + " ";
+            }
+
+            alert("Sono stati eliminati i seguenti nodi: " + name_nodes + "\n" + "La pagina si ricaricherà automaticamente e nel menù sistemi si vedranno i nodi aggiornati");
+            document.location.reload(true);
+
+        });
+
+    </script>
+</body>
+</html>

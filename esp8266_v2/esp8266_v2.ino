@@ -53,8 +53,7 @@ void loop() {
     Serial.println("invia connessione 20 sec");
     EspConnect();
    } 
-
-  // send JSON Model
+   
   if(!accepted) {
     JsonSend();
   }

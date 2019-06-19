@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <title>HH monitoring system</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./stylesheets/main.css">
+  <script src="./javascripts/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+
+</head>
+<body>
+        <div class="bs-example">
+                <nav class="navbar navbar-expand-md navbar-light bg-light">
+                    <a href="/" class="navbar-brand">Home & Health</a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div id="navbarCollapse" class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Sistemi</a>
+                                <div class="dropdown-menu">
+                                    <% net.forEach((node) => { %>
+                                        <% if(node.id != id){ %>
+                                            <!-- <a href= "/<%= node.link%>" class="dropdown-item"><%= node.name %></a> -->
+                                            <a href= "/<%= node.id%>" class="dropdown-item"><%= node.name %></a>
+                                        <% } %>
+                                    <% }) %> 
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+    <header class="page-header header container-fluid">
+            <div class="overlay"></div>
+            <div class="description" style="position: absolute; top: 13%">
+                    <h1><%= node.name%></h1>
+                    <p style="text-align: left"><%= node.description%> </p>
+
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                            <% node.actions.forEach((action) => { %>
+                                <!-- <iframe name="votar" style="display:none;"></iframe> -->
+                                <!-- <form action="/action" method="POST" target="votar" onclick="sendAction()"> -->
+                                <!-- <form target="votar" onclick="sendAction()"></form>  -->
+                                    <!-- <input type="hidden" id="action" name="action" value="<%= action%>" />
+                                    <input type="hidden" id="id_for_action" name="id" value="<%= node.id%>" /> -->
+                                    <button onclick="sendAction(this.value)" value='<%= action%> '><%= action%></button> 
+                                <!-- </form>  -->
+                            <% }) %> 
+                    </div>
+
+            </div>
+            <table id="tableHealth" class="table table-bordered" style="position: relative; top:30%; width: 50%;left: 25%">
+                    <thead>
+                        <tr>
+                        <th scope="col">Sensore</th>
+                        <th scope="col">Valore</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% node.properties.forEach((prop) => { %>
+                            <tr>
+                                <td><%= prop%></td>
+                                <td id="<%= prop%>">in attesa di valori ..</td>
+                            </tr>
+                        <% }) %> 
+                    </tbody>
+            </table>
+    </header>
+
+    <p id="id" style="display: none"><%=node.id%></p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
+
+    <script>
+        const socket = io();
+        var id = document.getElementById('id');
+        axios.defaults.port = 80;
+
+        socket.on(id.innerHTML, (data) =>{
+            for (var property in data) {
+                if (data.hasOwnProperty(property) && property!='id' && property!='db') {
+                    var td = document.getElementById(property);
+                    if(data[property].type == "normal")
+                        td.innerHTML = data[property].value;
+                    else
+                        td.innerHTML = "<span style=\"color:red\">" + data[property].alert;
+                }
+            }
+        });
+
+        socket.on('remove', (data) => {
+
+            console.log(data);
+
+            var same = false;
+
+            for(var i=0 ; i<data.length; i++)
+            {
+                //console.log(data[i].id);
+                //console.log(id.innerHTML);
+
+                if(data[i].id == id.innerHTML){
+                    alert("Il nodo che si sta osservando è stato disconesso dalla rete, sarai rimandato alla pagina principale e nel menù sistemi vedrai la lista di nodi aggiornati");
+                    window.location.replace("http://localhost:8080/");
+                    same = true;
+                }
+            }
+
+            if(!same){
+                var name_nodes = "";
+
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i]);
+                    name_nodes = name_nodes + data[i].name + " ";
+                }
+
+                alert("Sono stati eliminati i seguenti nodi: " + name_nodes + "\n" + "La pagina si ricaricherà automaticamente e nel menù sistemi si vedranno i nodi aggiornati");
+                document.location.reload(true);
+            }
+        });
+
+        socket.on('add', (data) =>{
+            alert("E' stato aggiunto il nodo " + data + " alla rete, la pagina si ricaricherà e nel menù sistemi ci saranno i nodi aggiornati");
+            document.location.reload(true);
+        });
+
+        function sendAction(val){
+
+            var data = {id: id.innerHTML, action: val.trim()};
+
+            console.log(JSON.stringify(data));
+    
+            $.ajax({
+                type: "POST",
+                url: "http://149.132.182.70/action",
+                data: JSON.stringify(data),
+                success: 200,
+                dataType: "json"
+            });
+        }
+
+    </script>
+
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script src="./javascripts/main.js"></script>
+  
+</body>
+</html>

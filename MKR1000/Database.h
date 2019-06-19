@@ -18,10 +18,20 @@ void createTable(char* json) {
                    "`id` INT NOT NULL AUTO_INCREMENT,"
                    "`data` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY ( `id` ))";
 
+  //MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
+
   // allocate the memory for the document
   const size_t CAPACITY = JSON_OBJECT_SIZE(300);
   StaticJsonDocument<CAPACITY> doc;
- 
+  /*
+    // deserialize the object
+    char json[] = "{\"espId\":\"espIdValue2\","
+                "\"properties\":["
+                "\"pep1\","
+                "\"pep2\","
+                "\"pep3\","
+                "]}";
+  */
   deserializeJson(doc, json);
 
   // extract the data
@@ -75,6 +85,8 @@ void writeMultiToDb(char* json) {
   const size_t CAPACITY = JSON_OBJECT_SIZE(300);
   StaticJsonDocument<CAPACITY> doc;
 
+  //char json[] = "{\"espId\":\"espFinale\",\"temp\":'28',\"knock\":'1'}";
+
   deserializeJson(doc, json);
   JsonObject object = doc.as<JsonObject>();
   serializeJsonPretty(object, Serial);
@@ -127,7 +139,9 @@ void writeMultiToDb(char* json) {
     char valSc[10];
     valS.toCharArray(valSc,10); 
     Serial.println(valSc);
-    /*
+    /******
+       parte vecchia
+
        //converto il valore in string
        // const char* valS = value.as<char*>();
     */

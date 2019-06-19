@@ -72,10 +72,10 @@ void loop() {
   // invio dati se richiesto (on/off)
   checkToSend();
 
-  // rimango in ascolto sulla callback per messaggi MQTT
+  // rimango in ascolot sulla callback per messaggi MQTT
   clientPubSub.loop();
 
-  delay(1000); // invia dati ogni secondo circa
+  delay(1000); // invia dati ogni 2 secodni circa
 
 }
 
